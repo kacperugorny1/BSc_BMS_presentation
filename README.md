@@ -1,5 +1,5 @@
 # Diploma thesis
-![End device](./FinalPCB.jpg)
+<img src="./FinalPCB.jpg" alt="Final pcb" width="300">
 # Building management system
 # Abstract
 Diploma thesis is dedicated to the creation of distributed building management system, which is fully customizable and extensible. 
