@@ -1,5 +1,5 @@
-### Diploma thesis
-## Building management system
+# Diploma thesis
+# Building management system
 # Abstract
 Diploma thesis is dedicated to the creation of distributed building management system, which is fully customizable and extensible. 
 Project aimed to designing and creation of end device, which uses IoT technologies, specifically MQTT communication protocol. 
