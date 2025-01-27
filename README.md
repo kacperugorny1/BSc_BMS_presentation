@@ -1,5 +1,6 @@
-###Diploma thesis
-##Building management system
+### Diploma thesis
+## Building management system
+# Abstract
 Diploma thesis is dedicated to the creation of distributed building management system, which is fully customizable and extensible. 
 Project aimed to designing and creation of end device, which uses IoT technologies, specifically MQTT communication protocol. 
 Central unit of the system is single board computer Raspberry PI4, which plays role of local server. It stores data about connected devices and logical conditions. 
@@ -8,3 +9,11 @@ The software for Android devices allows adding, editing, and deleting end device
 
 After implementation of project, tests were conducted. After analysis of results, it was determined, that the system is functioning correctly. 
 Then a implementation scenario of garden control system was described.
+
+# Technologies
+- C programming language
+- STM32, STM-HAL
+- ESP32, ESP-IDF
+- ADC, DAC, DMA
+- LINUX, Pthreads
+- AndroidSDK, Kotlin, Jetpack Compose
