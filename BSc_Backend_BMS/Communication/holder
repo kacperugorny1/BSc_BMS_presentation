@@ -1,0 +1,70 @@
+
+void executeRsideDigital(int id, int targetId, int g, int *actualState,MQTTAsync_message * pubmsg, char* endptr, char* msg){
+	char symb = endptr[1];
+	char set;
+	//adress check
+	if(g < 5 || g > 8) return;
+	
+	if(symb == '1') set = 0xFF;
+	else if(symb == '0') set = 0x00;
+	else if (symb == '!') set = (prev_dig[targetId]>>(g-1)) & 1 ? 0x00 : 0xFF;
+	else if (symb == 'd'){
+		int targetId2;
+		int devId = (int)strtol(&endptr[2], &endptr, 10);
+		int g2 = (int)strtol(&endptr[1], &endptr, 10);
+		for(int j = 0; j < topics_count; ++j){
+			if(IDs[j] != devId) continue;
+			targetId2 = j;
+		} 
+		if(targetId2 != id)
+			set = ((prev_dig[targetId2]>>(g2-1)) & 1) ? 0xFF:0x00;
+		else
+			set = ((actualState[0]>>(g2-1)) & 1) ? 0xFF:0x00;
+	}
+	else return;
+
+	pubmsg->payloadlen = sprintf(msg,"00FFFF%02X%02X", 1 << (g - 5), set);
+	pubmsg->payload = msg;
+}
+
+void executeRsideAnalog(int id, int targetId, int g, int *actualState,MQTTAsync_message * pubmsg, char* endptr, char *msg){
+	uint16_t val;
+	if(endptr[1]>=48 && endptr[1] < 58)
+		val = (uint16_t)strtol(&endptr[1], &endptr, 10);
+	else if(endptr[1] == 'd'){
+		int devId = (int)strtol(&endptr[2], &endptr, 10);
+		bool analog;
+		int targetId2;
+
+		if(endptr[0] == 'g') analog =  false;
+		else if(endptr[0] == 'a') analog = true;
+		else return;
+		
+		int g2 = (int)strtol(&endptr[1], &endptr, 10);
+		for(int j = 0; j < topics_count; ++j){
+			if(IDs[j] != devId) continue;
+			targetId2 = j;
+		} 
+		if(analog) {
+			if(targetId2 != id)
+				val = prev_an[targetId2][g2 - 1];
+			else
+				val = actualState[g2];
+		}
+		else{
+		if(targetId2 != id)
+			val = ((prev_dig[targetId2]>>(g2-1)) & 1) ? 0xFFF:0x00;
+		else
+			val = ((actualState[0]>>(g2-1)) & 1) ? 0xFFF:0x00;
+		} 
+	}
+	//address check
+	if (g == 3) g = 0x04;
+	else if(g == 4) g = 0x06;
+	else return;
+
+	if(val > 0x0FFF) val = 0x0FFF;
+	pubmsg->payloadlen = sprintf(msg, "FFFFFF%02X%04X",g,val);
+	pubmsg->payload = msg;
+
+}
